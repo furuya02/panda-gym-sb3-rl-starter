@@ -28,24 +28,28 @@ def main() -> None:
         ea = EventAccumulator(str(run_dir))
         ea.Reload()
         scalar_tags = ea.Tags()["scalars"]
-        for tag, label in METRICS:
+
+        fig, axes = plt.subplots(
+            len(METRICS), 1, figsize=(8, 4 * len(METRICS)), sharex=True
+        )
+        for ax, (tag, label) in zip(axes, METRICS):
             if tag not in scalar_tags:
+                ax.set_title(f"{label} (no data)")
                 continue
             events = ea.Scalars(tag)
             xs = [e.step for e in events]
             ys = [e.value for e in events]
-            plt.figure(figsize=(8, 4))
-            plt.plot(xs, ys, linewidth=1.2)
-            plt.xlabel("training step")
-            plt.ylabel(label)
-            plt.title(f"{run_dir.name}: {label}")
-            plt.grid(alpha=0.3)
-            plt.tight_layout()
-            safe = tag.replace("/", "_")
-            out = Path(args.out) / f"{run_dir.name}_{safe}.png"
-            plt.savefig(out, dpi=120)
-            plt.close()
-            print(f"saved: {out}")
+            ax.plot(xs, ys, linewidth=1.2)
+            ax.set_ylabel(label)
+            ax.grid(alpha=0.3)
+            ax.set_title(label)
+        axes[-1].set_xlabel("training step")
+        fig.suptitle(run_dir.name, fontsize=14)
+        fig.tight_layout(rect=[0, 0, 1, 0.97])
+        out = Path(args.out) / f"{run_dir.name}_curves.png"
+        plt.savefig(out, dpi=120)
+        plt.close()
+        print(f"saved: {out}")
 
 
 if __name__ == "__main__":

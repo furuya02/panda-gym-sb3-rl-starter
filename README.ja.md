@@ -36,8 +36,8 @@ panda-gym-sb3-rl-starter/
 ├── train.py               # SAC + HER 学習（デフォルト 25 000 step）
 ├── eval.py                # Deterministic 評価 + MP4
 ├── demo_random.py         # 学習前比較用のランダム policy MP4
-├── plot_curves.py         # TensorBoard ログから個別学習曲線 PNG 生成
-├── plot_compare.py        # TensorBoard ログから HER on/off 比較プロット生成
+├── plot_curves.py         # TensorBoard ログから run ごとに 5 metric を 1 枚にまとめた学習曲線 PNG を生成
+├── plot_compare.py        # TensorBoard ログから success_rate + ep_rew_mean を縦 2 段にまとめた比較 PNG を生成
 ├── README.md
 └── README.ja.md
 ```
@@ -132,8 +132,8 @@ python3 demo_random.py --episodes 10
 python3 plot_curves.py
 ```
 
-`logs/tb/` 配下の TensorBoard ログから success rate / episode reward / critic loss /
-actor loss / entropy coefficient の PNG を `plots/` に保存。
+`logs/tb/` 配下の TensorBoard run ごとに、success rate / episode reward / critic loss /
+actor loss / entropy coefficient を縦 5 段に並べた 1 枚の PNG を `plots/` に保存。
 
 ### 6. アブレーション：HER 無しで学習
 
@@ -150,10 +150,11 @@ goal-conditioned sparse reward タスクで HER がどれくらい効いてい�
 python3 plot_compare.py --runs SAC_1:HER SAC_2:no-HER --name reach_her_vs_noher
 ```
 
-2 つの TensorBoard run の success_rate / ep_rew_mean を 1 枚の PNG に重ねて
-`plots/` に出力。`SAC_1`（HER on、ステップ 2 で生成）と `SAC_2`（HER off、ステップ 6
-で生成）の両方が `logs/tb/` 配下に存在する必要があります。ブログ記事の比較グラフ
-の生成に使用しています。
+2 つの TensorBoard run の success_rate（上段）と ep_rew_mean（下段）を縦 2 段に
+並べた 1 枚の PNG を `plots/` に出力。各 subplot に 2 run の曲線を重ねて表示します。
+`SAC_1`（HER on、ステップ 2 で生成）と `SAC_2`（HER off、ステップ 6 で生成）の
+両方が `logs/tb/` 配下に存在する必要があります。ブログ記事の比較グラフの生成に
+使用しています。
 
 ## バージョン
 

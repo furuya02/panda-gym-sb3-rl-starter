@@ -38,8 +38,8 @@ panda-gym-sb3-rl-starter/
 ├── train.py               # SAC + HER training (25 000 steps default)
 ├── eval.py                # Deterministic eval + MP4
 ├── demo_random.py         # Random-policy MP4 for "before training" comparison
-├── plot_curves.py         # TensorBoard logs → individual learning-curve PNGs
-├── plot_compare.py        # TensorBoard logs → overlaid HER on/off comparison PNG
+├── plot_curves.py         # TensorBoard logs → combined learning-curve PNG (one per run)
+├── plot_compare.py        # TensorBoard logs → 2-panel comparison PNG (success_rate + ep_rew_mean)
 ├── README.md
 └── README.ja.md
 ```
@@ -135,8 +135,9 @@ Saves `videos/random.mp4` for "before training" baseline.
 python3 plot_curves.py
 ```
 
-Reads `logs/tb/` and saves PNG charts (success rate / episode reward / critic loss /
-actor loss / entropy coefficient) under `plots/`.
+For each TensorBoard run under `logs/tb/`, saves a single PNG to `plots/`
+with 5 vertically stacked subplots (success rate / episode reward / critic loss /
+actor loss / entropy coefficient).
 
 ### 6. Ablation: train without HER
 
@@ -153,10 +154,10 @@ Useful for showing how much HER actually contributes on goal-conditioned sparse-
 python3 plot_compare.py --runs SAC_1:HER SAC_2:no-HER --name reach_her_vs_noher
 ```
 
-Overlays the success_rate / ep_rew_mean curves of two TensorBoard runs in a single
-PNG under `plots/`. Requires both `SAC_1` (HER on, from step 2) and `SAC_2` (HER off,
-from step 6) to exist under `logs/tb/`. Used to produce the comparison chart shown
-in the blog post.
+Saves a single PNG to `plots/` with two vertically stacked subplots (success_rate
+on top, ep_rew_mean on bottom), each overlaying the curves from the two TensorBoard
+runs. Requires both `SAC_1` (HER on, from step 2) and `SAC_2` (HER off, from step 6)
+to exist under `logs/tb/`. Used to produce the comparison chart shown in the blog post.
 
 ## Versions
 
