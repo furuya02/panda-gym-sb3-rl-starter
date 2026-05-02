@@ -34,26 +34,28 @@ def main() -> None:
         ea.Reload()
         runs.append((label, ea))
 
-    for tag, ylabel in METRICS:
-        plt.figure(figsize=(8, 4))
+    fig, axes = plt.subplots(
+        len(METRICS), 1, figsize=(8, 4 * len(METRICS)), sharex=True
+    )
+    for ax, (tag, ylabel) in zip(axes, METRICS):
         for label, ea in runs:
             if tag not in ea.Tags()["scalars"]:
                 continue
             events = ea.Scalars(tag)
             xs = [e.step for e in events]
             ys = [e.value for e in events]
-            plt.plot(xs, ys, linewidth=1.4, label=label)
-        plt.xlabel("training step")
-        plt.ylabel(ylabel)
-        plt.title(ylabel)
-        plt.grid(alpha=0.3)
-        plt.legend()
-        plt.tight_layout()
-        safe = tag.replace("/", "_")
-        out = Path(args.out) / f"{args.name}_{safe}.png"
-        plt.savefig(out, dpi=120)
-        plt.close()
-        print(f"saved: {out}")
+            ax.plot(xs, ys, linewidth=1.4, label=label)
+        ax.set_ylabel(ylabel)
+        ax.grid(alpha=0.3)
+        ax.set_title(ylabel)
+        ax.legend()
+    axes[-1].set_xlabel("training step")
+    fig.suptitle(args.name, fontsize=14)
+    fig.tight_layout(rect=[0, 0, 1, 0.97])
+    out = Path(args.out) / f"{args.name}.png"
+    plt.savefig(out, dpi=120)
+    plt.close()
+    print(f"saved: {out}")
 
 
 if __name__ == "__main__":
