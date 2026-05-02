@@ -1,0 +1,5 @@
+panda-gym==3.0.7
+stable-baselines3==2.7.0
+gymnasium==0.29.1
+tensorboard==2.16.2
+imageio[ffmpeg]==2.34.1
