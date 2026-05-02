@@ -38,7 +38,7 @@ panda-gym-sb3-rl-starter/
 ├── train.py               # SAC + HER training (25 000 steps default)
 ├── eval.py                # Deterministic eval + MP4
 ├── demo_random.py         # Random-policy MP4 for "before training" comparison
-├── plot_curves.py         # TensorBoard logs → individual learning-curve PNGs
+├── plot_curves.py         # TensorBoard logs → combined learning-curve PNG (one per run)
 ├── plot_compare.py        # TensorBoard logs → overlaid HER on/off comparison PNG
 ├── README.md
 └── README.ja.md
@@ -135,8 +135,9 @@ Saves `videos/random.mp4` for "before training" baseline.
 python3 plot_curves.py
 ```
 
-Reads `logs/tb/` and saves PNG charts (success rate / episode reward / critic loss /
-actor loss / entropy coefficient) under `plots/`.
+For each TensorBoard run under `logs/tb/`, saves a single PNG to `plots/`
+with 5 vertically stacked subplots (success rate / episode reward / critic loss /
+actor loss / entropy coefficient).
 
 ### 6. Ablation: train without HER
 
